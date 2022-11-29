@@ -14,7 +14,7 @@ const PLAYER_SPEED = 200; // The player's movement speed
 
 // Bullet configuration
 const BULLET_RADIUS = 9; // The bullet's circular radius, used for collision detection
-const BULLET_SPEED = 800; // The bullet's movement speed when shot
+const BULLET_SPEED = 1200; // The bullet's movement speed when shot
 
 // An x, y vector representing the spawn location of the player on the map
 const SPAWN_POSITION = {
@@ -108,7 +108,7 @@ const store: Store = {
       game.players.push({
         id: userId,
         body: Object.assign(body, { oType: BodyType.Player }),
-        direction: Direction.None,
+        direction: { x: 0, y: 0 },
         angle: 0,
       });
     }
@@ -201,15 +201,8 @@ setInterval(() => {
 function tick(game: InternalState, deltaMs: number) {
   // Move each player with a direction set
   game.players.forEach((player) => {
-    if (player.direction === Direction.Up) {
-      player.body.y -= PLAYER_SPEED * deltaMs;
-    } else if (player.direction === Direction.Down) {
-      player.body.y += PLAYER_SPEED * deltaMs;
-    } else if (player.direction === Direction.Left) {
-      player.body.x -= PLAYER_SPEED * deltaMs;
-    } else if (player.direction === Direction.Right) {
-      player.body.x += PLAYER_SPEED * deltaMs;
-    }
+    player.body.x += PLAYER_SPEED * player.direction.x * deltaMs;
+    player.body.y += PLAYER_SPEED * player.direction.y * deltaMs;
   });
 
   // Move all active bullets along a path based on their radian angle
